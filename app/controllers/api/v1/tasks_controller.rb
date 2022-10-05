@@ -8,6 +8,7 @@ class Api::V1::TasksController < ApplicationController
             .select("tasks.*, phases.name as phase_name, phases.project_id as prj_id, projects.number as prj_number, projects.name as prj_name")
             .where(worker_id: params[:id])
             .where("tasks.planned_periodfr <= ?", Date.today)
+            .where(actual_periodto: nil)
             .order(:planned_periodto, :planned_periodfr)
     render json: { status: 200, tasks: tasks }
   end
@@ -79,9 +80,6 @@ class Api::V1::TasksController < ApplicationController
 
   end
 
-# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑　再確認済み
-
-
   # ProjectIdを条件とした一覧取得（工程名付）
   def index_by_project
     tasks = Task
@@ -89,7 +87,7 @@ class Api::V1::TasksController < ApplicationController
             .joins("LEFT OUTER JOIN employees AS emp ON emp.id=worker_id")
             .select("tasks.*, emp.name as worker_name, phases.name as phase_name")
             .where(projects: { id: params[:id]})
-            .order(:number)
+            .order("phases.id, tasks.number")
     render json: { status: 200, tasks: tasks }
   end
 

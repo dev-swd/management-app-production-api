@@ -1165,6 +1165,7 @@ class Api::V1::ProgressreportsController < ApplicationController
 
         # 開始日
         taskfr = Taskcopy
+                    .where(progressreport_id: prog.id)
                     .where(phase_id: ph.phase_id)
                     .where.not(actual_periodfr: nil)
                     .select(:actual_periodfr)
@@ -1180,11 +1181,12 @@ class Api::V1::ProgressreportsController < ApplicationController
         periodto = ""
         if periodfr.present? then
           # 終了日
-          if Taskcopy.exists?(phase_id: ph.phase_id, actual_periodto: nil) then
+          if Taskcopy.exists?(progressreport_id: prog.id, phase_id: ph.phase_id, actual_periodto: nil) then
             # 終了日未入力が１件でもある場合
           else
             # 終了日が全て入力されている場合
             taskto = Taskcopy
+                      .where(progressreport_id: prog.id)
                       .where(phase_id: ph.phase_id)
                       .select(:actual_periodto)
                       .order(actual_periodto: :desc)

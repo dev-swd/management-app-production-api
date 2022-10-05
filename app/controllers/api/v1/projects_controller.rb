@@ -63,18 +63,20 @@ class Api::V1::ProjectsController < ApplicationController
 
     # 状態の条件指定あり
     if params[:status].present? then
-      if where.present? then
-        where += "and  "
-      end      
       if params[:status]=="*" then
         # すべての場合は条件なし
-      elsif params[:status]=="-" then
-        where += "projects.status<>'完了' "
       else
-        where += "projects.status='" + params[:status] + "' "
+        if where.present? then
+          where += "and  "
+        end
+        if params[:status]=="-" then
+          where += "projects.status<>'完了' "
+        else
+          where += "projects.status='" + params[:status] + "' "
+        end
       end
     end
-
+    
     # PLの条件指定あり
     if params[:pl].present? then
       if where.present? then
