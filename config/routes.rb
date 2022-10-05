@@ -120,6 +120,7 @@ Rails.application.routes.draw do
           get :index_by_member
           get :index_by_conditional
           post :create_no_project
+          get :index_audit_todo
         end
       end
 

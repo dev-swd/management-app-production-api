@@ -9,6 +9,14 @@ class Api::V1::ProjectsController < ApplicationController
     render json: { status: 200, prjs: prjs }
   end
 
+  # 内部監査ToDo取得
+  def index_audit_todo
+    # 対象＝計画書監査中、完了報告書監査中
+    prjs = Project
+            .where(status: ["計画書監査中", "完了報告書監査中"])
+    render json: { status: 200, prjs: prjs }
+  end
+
   # PL一覧
   def index_pl
 
